@@ -1,17 +1,17 @@
 package org.javaacadmey.wonder_field;
 
 import java.util.Arrays;
-import java.util.Locale;
 
 public class Tableau {
     private String correctAnswer;
-    private String[] letters;
+    private String[] lettersOnTableau;
+    private static final String UNKNOWN_LETTER = "_";
 
-    public Tableau(String correctAnswer) {
+    public void init(String correctAnswer) {
         this.correctAnswer = correctAnswer.toLowerCase();
-        this.letters = new String[this.correctAnswer.length()];
-        Arrays.fill(this.letters, "_");
-        for (String letter : this.letters) {
+        this.lettersOnTableau = new String[this.correctAnswer.length()];
+        Arrays.fill(this.lettersOnTableau, UNKNOWN_LETTER);
+        for (String letter : this.lettersOnTableau) {
             System.out.printf("%s ", letter);
         }
         System.out.println();
@@ -20,11 +20,11 @@ public class Tableau {
     public void openLetter(String letter) {
         for (int i = 0; i < this.correctAnswer.length(); i++) {
             if (this.correctAnswer.substring(i, i + 1).equalsIgnoreCase(letter)) {
-                this.letters[i] = letter;
+                this.lettersOnTableau[i] = letter;
             }
         }
-        for (String character : this.letters) {
-            System.out.printf("%s ", character);
+        for (String character : this.lettersOnTableau) {
+            System.out.printf("%s ", character.toUpperCase());
         }
         System.out.println();
     }
@@ -35,8 +35,8 @@ public class Tableau {
         }
     }
 
-    private boolean containsLetter(char letter) {
-        return false;
+    public boolean containsUnknownLetters() {
+        return Arrays.toString(this.lettersOnTableau).contains(UNKNOWN_LETTER);
     }
 
     private boolean checkAttributes(char attribute) {

@@ -8,7 +8,7 @@ public class Game {
     private final static int NUMBER_OF_GROUP_ROUNDS = 3;
     private final static int INDEX_OF_FINAL_ROUND = 3;
 
-    private final static Scanner scanner = new Scanner(System.in);
+    public final static Scanner scanner = new Scanner(System.in);
 
     private String[] questions = new String[NUMBER_OF_ROUNDS];
     private String[] answers = new String[NUMBER_OF_ROUNDS];
