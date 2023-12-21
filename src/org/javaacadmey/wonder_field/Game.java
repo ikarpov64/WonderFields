@@ -1,5 +1,7 @@
 package org.javaacadmey.wonder_field;
 
+import org.javaacadmey.wonder_field.player.Player;
+
 import java.util.Scanner;
 
 public class Game {
@@ -12,6 +14,10 @@ public class Game {
 
     private String[] questions = new String[NUMBER_OF_ROUNDS];
     private String[] answers = new String[NUMBER_OF_ROUNDS];
+    private Tableau tableau = new Tableau();
+    private Yakubovich yakubovich = new Yakubovich();
+    private Player[] players = new Player[NUMBER_OF_GROUP_ROUNDS];
+    private Player[] winners = new Player[NUMBER_OF_GROUP_ROUNDS];
 
     public void init() {
         System.out.println("Запуск игры 'Поле Чудес' - подготовка к игре. " +
@@ -29,6 +35,19 @@ public class Game {
         System.out.println("\n".repeat(50));
     }
 
+    public Player[] createPlayers() {
+        String string = "Игрок №%s представьтесь: имя,город. Например: Иван,Москва";
+        for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
+            System.out.printf(string, i);
+            String aboutPlayer = scanner.nextLine();
+
+            String[] splitString = aboutPlayer.split(",");
+            Player player = new Player(splitString[0].trim(),
+                    splitString[1].trim());
+            players[i] = player;
+        }
+        return players;
+    }
     private void inputtingQuestions() {
         for (int i = 0; i < NUMBER_OF_ROUNDS; i++) {
             System.out.printf("Введите вопрос №%s\n", i + 1);
@@ -38,6 +57,25 @@ public class Game {
             questions[i] = question;
             answers[i] = answer;
         }
+    }
+    private static String[] playersName(Player[] players) {
+        String[] playersName = new String[NUMBER_OF_PLAYERS];
+        for (int i = 0; i < players.length; i++) {
+            playersName[i] = players[i].getName();
+        }
+        return playersName;
+    }
+
+    private boolean checkTableau() {
+        return !tableau.containsUnknownLetters();
+    }
+
+    public boolean playerTurn(String question, Player player) {
+        while (!checkTableau()) {
+            player.playerTurn();
+
+        }
+        return true;
     }
 
     private void completeQuestions() {

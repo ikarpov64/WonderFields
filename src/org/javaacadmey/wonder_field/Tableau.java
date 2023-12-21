@@ -3,9 +3,9 @@ package org.javaacadmey.wonder_field;
 import java.util.Arrays;
 
 public class Tableau {
+    private static final String UNKNOWN_LETTER = "_";
     private String correctAnswer;
     private String[] lettersOnTableau;
-    private static final String UNKNOWN_LETTER = "_";
 
     public void init(String correctAnswer) {
         this.correctAnswer = correctAnswer.toLowerCase();
@@ -39,11 +39,9 @@ public class Tableau {
         return Arrays.toString(this.lettersOnTableau).contains(UNKNOWN_LETTER);
     }
 
-    private boolean checkAttributes(char attribute) {
-        return true;
+    private boolean checkLetter(String letter) {
+        return Arrays.toString(this.lettersOnTableau).contains(letter);
     }
 
-    private boolean checkAttributes(String attribute) {
-        return true;
-    }
+
 }

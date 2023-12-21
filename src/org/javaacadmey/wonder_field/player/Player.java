@@ -47,4 +47,12 @@ public class Player {
         playerAnswer.setAnswerType(answerType);
         return playerAnswer;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getCity() {
+        return city;
+    }
 }
