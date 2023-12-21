@@ -12,6 +12,14 @@ public class PlayerAnswer {
         this.answer = answer;
     }
 
+    public String getAnswerType() {
+        return answerType;
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
+
     @Override
     public String toString() {
         return "PlayerAnswer{" +

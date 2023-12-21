@@ -1,6 +1,7 @@
 package org.javaacadmey.wonder_field;
 
 import org.javaacadmey.wonder_field.player.Player;
+import org.javaacadmey.wonder_field.player.PlayerAnswer;
 
 import java.util.Scanner;
 
@@ -16,7 +17,7 @@ public class Game {
     private String[] answers = new String[NUMBER_OF_ROUNDS];
     private Tableau tableau = new Tableau();
     private Yakubovich yakubovich = new Yakubovich();
-    private Player[] players = new Player[NUMBER_OF_GROUP_ROUNDS];
+
     private Player[] winners = new Player[NUMBER_OF_GROUP_ROUNDS];
 
     public void init() {
@@ -36,6 +37,8 @@ public class Game {
     }
 
     public Player[] createPlayers() {
+        Player[] players = new Player[NUMBER_OF_GROUP_ROUNDS];
+
         String string = "Игрок №%s представьтесь: имя,город. Например: Иван,Москва";
         for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
             System.out.printf(string, i);
@@ -48,6 +51,7 @@ public class Game {
         }
         return players;
     }
+
     private void inputtingQuestions() {
         for (int i = 0; i < NUMBER_OF_ROUNDS; i++) {
             System.out.printf("Введите вопрос №%s\n", i + 1);
@@ -72,10 +76,27 @@ public class Game {
 
     public boolean playerTurn(String question, Player player) {
         while (!checkTableau()) {
-            player.playerTurn();
+            PlayerAnswer answer = player.playerTurn();
+            yakubovich.checkPlayerAnswer(answer, this.answers[1], tableau);
 
         }
         return true;
+    }
+
+    public void playRound() {
+//        for (int i = 0; i < this.players.length; i++) {
+//            this.players[i].playerTurn();
+//        }
+    }
+
+    public void playAllGroupRound() {
+        for (int i = 0; i < NUMBER_OF_GROUP_ROUNDS; i++) {
+            Player[] players = createPlayers();
+            tableau.init(answers[i]);
+            yakubovich.invitingPlayers(playersName(players), i);
+            playRound();
+
+        }
     }
 
     private void completeQuestions() {

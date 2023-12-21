@@ -2,9 +2,11 @@ package org.javaacadmey.wonder_field.player;
 
 import org.javaacadmey.wonder_field.Game;
 
+import static org.javaacadmey.wonder_field.player.AnswerType.*;
+
 public class Player {
-    private String name;
-    private String city;
+    private final String name;
+    private final String city;
 
     public Player(String name, String city) {
         this.name = name;
@@ -13,13 +15,13 @@ public class Player {
 
     public String sayLetter() {
         String letter = Game.scanner.nextLine();
-        System.out.println(this.name + ": " + letter);
+        System.out.printf("Игрок %s: буква - %s\n", this.name, letter);
         return letter;
     }
 
     public String sayWord() {
         String word = Game.scanner.nextLine();
-        System.out.println(this.name + ": " + word);
+        System.out.printf("Игрок %s: слово - %s\n", this.name, word);
         return word;
     }
 
@@ -28,14 +30,14 @@ public class Player {
         System.out.println("Если хотите букву нажмите 'б' и enter, если хотите слово нажмите 'c' и enter.");
 
         PlayerAnswer playerAnswer = new PlayerAnswer();
-        String answer = "";
-        String answerType = "";
+        String answer;
+        String answerType;
         while (true) {
             answerType = Game.scanner.nextLine();
-            if (answerType.equalsIgnoreCase("б")) {
+            if (answerType.equalsIgnoreCase(ANSWER_TYPE.getLetter())) {
                 answer = sayLetter();
                 break;
-            } else if (answerType.equalsIgnoreCase("с")) {
+            } else if (answerType.equalsIgnoreCase(ANSWER_TYPE.getWord())) {
                 answer = sayWord();
                 break;
             } else {

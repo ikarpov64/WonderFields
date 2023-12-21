@@ -1,7 +1,6 @@
 package org.javaacadmey.wonder_field;
 
 import org.javaacadmey.wonder_field.player.Player;
-import org.javaacadmey.wonder_field.player.PlayerAnswer;
 
 public class Runner {
     public static void main(String[] args) {
