@@ -18,16 +18,16 @@ public class Yakubovich {
 
     public void invitingPlayers(String[] players, int numberOfRound) {
         if (numberOfRound != 3) {
-            String speech = "%s: приглашаю %s тройку игроков: %s";
-            System.out.printf(speech, name, numberOfRound, stringOfPlayersName(players));
+            String speech = "%s: приглашаю %s тройку игроков: %s\n";
+            System.out.printf(speech, name, numberOfRound + 1, stringOfPlayersName(players));
         } else {
-            String speech = "%s: приглашаю победителей групповых этапов: %s";
+            String speech = "%s: приглашаю победителей групповых этапов: %s\n";
             System.out.printf(speech, name, stringOfPlayersName(players));
         }
     }
 
     public void askingQuestion(String question) {
-        System.out.printf("%s: Внимание вопрос!\n%s", name, question);
+        System.out.printf("%s: Внимание вопрос!\n%s\n", name, question);
     }
 
     public void shoutAboutVictory(String playerName, String city, boolean isFinalRound) {
@@ -40,31 +40,37 @@ public class Yakubovich {
         }
     }
 
-    public void checkPlayerAnswer(PlayerAnswer playerAnswer, String answer, Tableau tableau) {
+    public boolean checkPlayerAnswer(PlayerAnswer playerAnswer, String answer, Tableau tableau) {
+        boolean correctAnswer = false;
         if (playerAnswer.getAnswerType().equals(ANSWER_TYPE.getLetter())) {
             if (playerAnswer.getAnswer().equals(answer)) {
                 System.out.printf("%s: %s! Абсолютно верно!", name, answer);
                 tableau.openWord(answer);
+                System.out.println("__________________________________");
+                correctAnswer = true;
             } else {
                 System.out.printf("%s: Неверно! Следующий игрок!", name);
             }
-            System.out.println("__________________________________");
+
         } else if (playerAnswer.getAnswerType().equals(ANSWER_TYPE.getWord())) {
             if (playerAnswer.getAnswer().contains(answer)) {
                 String speech = "Есть такая буква, откройте ее!";
                 System.out.printf("%s: %s!\n", name, speech);
                 tableau.openLetter(answer);
+                correctAnswer = true;
             } else {
                 String speech = "Нет такой буквы! Следующий игрок, крутите барабан!";
                 System.out.printf("%s: %s\n", name, speech);
             }
-            System.out.println("__________________________________");
         } else {
             System.out.println("Что-то пошло не так.");
         }
+
+        System.out.println("__________________________________");
+        return correctAnswer;
     }
 
     public static String stringOfPlayersName(String[] playersName) {
-        return String.format("%s, %s, %s", playersName[0], playersName[1], playersName[3]);
+        return String.format("%s, %s, %s", playersName[0], playersName[1], playersName[2]);
     }
 }

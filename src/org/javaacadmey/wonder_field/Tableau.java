@@ -6,7 +6,6 @@ public class Tableau {
     private static final String UNKNOWN_LETTER = "_";
     private String correctAnswer;
     private String[] lettersOnTableau;
-//    private char[] charsOnTableau;
 
     public void init(String correctAnswer) {
         this.correctAnswer = correctAnswer.toLowerCase();

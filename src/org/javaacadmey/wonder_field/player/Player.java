@@ -13,13 +13,13 @@ public class Player {
         this.city = city;
     }
 
-    public String sayLetter() {
+    private String sayLetter() {
         String letter = Game.scanner.nextLine();
         System.out.printf("Игрок %s: буква - %s\n", this.name, letter);
         return letter;
     }
 
-    public String sayWord() {
+    private String sayWord() {
         String word = Game.scanner.nextLine();
         System.out.printf("Игрок %s: слово - %s\n", this.name, word);
         return word;
