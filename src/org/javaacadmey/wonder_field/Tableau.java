@@ -40,10 +40,6 @@ public class Tableau {
         return Arrays.toString(this.lettersOnTableau).contains(UNKNOWN_LETTER);
     }
 
-    private boolean checkLetter(String letter) {
-        return Arrays.toString(this.lettersOnTableau).contains(letter);
-    }
-
     public String getCorrectAnswer() {
         return correctAnswer;
     }

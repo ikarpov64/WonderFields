@@ -56,14 +56,13 @@ public class Yakubovich {
     public boolean checkPlayerAnswer(PlayerAnswer playerAnswer, String answer, Tableau tableau) {
         boolean correctAnswer = false;
         if (playerAnswer.getAnswerType().equals(ANSWER_TYPE.getWord())) {
-            if (answer.equals(playerAnswer.getAnswer())) {
+            if (answer.toLowerCase().equals(playerAnswer.getAnswer())) {
                 System.out.printf("%s: %s! Абсолютно верно!\n", name, answer);
                 tableau.openWord(answer);
                 correctAnswer = true;
             } else {
                 System.out.printf("%s: Неверно! Следующий игрок!\n", name);
             }
-
         } else if (playerAnswer.getAnswerType().equals(ANSWER_TYPE.getLetter())) {
             if (answer.contains(playerAnswer.getAnswer())) {
                 String speech = "Есть такая буква, откройте ее!";
@@ -77,7 +76,6 @@ public class Yakubovich {
         } else {
             System.out.println("Что-то пошло не так.");
         }
-
         System.out.println("__________________________________");
         return correctAnswer;
     }

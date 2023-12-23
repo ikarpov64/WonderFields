@@ -82,15 +82,19 @@ public class Game {
         boolean noMistake = true;
 
         while (noMistake && tableauNotOpen()) {
+//            System.out.printf("Ход игрока %s, %s.\n", player.getName(), player.getCity());
+            System.out.printf("Игрок %s, %s крутит барабан.\n", player.getName(), player.getCity());
             int playerScore = player.getScores();
             int newScore = wheel.rotateWheel(playerScore, yakubovich);
 
             if (playerScore == newScore) {
                 noMistake = false;
+                System.out.printf("Игрок %s из города %s пропускает ход.\n",
+                        player.getName(), player.getCity());
                 break;
             }
-
             PlayerAnswer answer = player.move();
+
             if (!this.yakubovich.checkPlayerAnswer(answer, this.tableau.getCorrectAnswer(), this.tableau)) {
                 noMistake = false;
             } else {
@@ -104,7 +108,6 @@ public class Game {
 
     public Player[] createPlayers() {
         Player[] players = new Player[NUMBER_OF_GROUP_ROUNDS];
-
         String string = "Игрок №%s представьтесь: имя,город. Например: Иван,Москва\n";
         for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
             System.out.printf(string, i + 1);
@@ -158,8 +161,8 @@ public class Game {
             String question = scanner.nextLine();
             System.out.printf("Введите ответ на вопрос №%s\n", i + 1);
             String answer = scanner.nextLine();
-            questions[i] = question;
-            answers[i] = answer;
+            this.questions[i] = question;
+            this.answers[i] = answer;
         }
     }
 
@@ -180,7 +183,8 @@ public class Game {
         String q2 = "Вопрос номер два?";
         String q3 = "Вопрос номер три?";
         String q4 = "Вопрос номер четыре?";
-        String a1 = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
+//        String a1 = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
+        String a1 = "один";
         String a2 = "два";
         String a3 = "три";
         String a4 = "четыре";

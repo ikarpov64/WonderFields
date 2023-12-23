@@ -34,7 +34,6 @@ public class Player {
     }
 
     public PlayerAnswer move() {
-        System.out.printf("Ход игрока %s, %s.\n", this.name, this.city);
         System.out.println("Если хотите букву нажмите 'б' и enter, если хотите слово нажмите 'c' и enter.");
 
         PlayerAnswer playerAnswer = new PlayerAnswer();
