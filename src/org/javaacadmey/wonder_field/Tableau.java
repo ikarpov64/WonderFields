@@ -11,10 +11,6 @@ public class Tableau {
         this.correctAnswer = correctAnswer.toLowerCase();
         this.lettersOnTableau = new String[this.correctAnswer.length()];
         Arrays.fill(this.lettersOnTableau, UNKNOWN_LETTER);
-        for (String letter : this.lettersOnTableau) {
-            System.out.printf("%s ", letter);
-        }
-        System.out.println();
     }
 
     public void showTableau() {
@@ -37,7 +33,6 @@ public class Tableau {
             for (int i = 0; i < word.length(); i++) {
                 openLetter(word.substring(i, i + 1));
             }
-            System.out.println("Верно, это: " + word);
         }
     }
 
@@ -49,5 +44,7 @@ public class Tableau {
         return Arrays.toString(this.lettersOnTableau).contains(letter);
     }
 
-
+    public String getCorrectAnswer() {
+        return correctAnswer;
+    }
 }

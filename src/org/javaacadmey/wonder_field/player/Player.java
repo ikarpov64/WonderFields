@@ -14,18 +14,25 @@ public class Player {
     }
 
     private String sayLetter() {
+        System.out.println("Введите букву:");
         String letter = Game.scanner.nextLine();
-        System.out.printf("Игрок %s: буква - %s\n", this.name, letter);
+        if (Game.checkLetter(letter)) {
+            System.out.printf("Игрок %s: буква - %s\n", this.name, letter);
+        } else {
+            System.out.println("Ошибка! это не русская буква, введите русскую букву.");
+            sayLetter();
+        }
         return letter;
     }
 
     private String sayWord() {
+        System.out.println("Введите слово:");
         String word = Game.scanner.nextLine();
         System.out.printf("Игрок %s: слово - %s\n", this.name, word);
         return word;
     }
 
-    public PlayerAnswer playerTurn() {
+    public PlayerAnswer turn() {
         System.out.printf("Ход игрока %s, %s.\n", this.name, this.city);
         System.out.println("Если хотите букву нажмите 'б' и enter, если хотите слово нажмите 'c' и enter.");
 

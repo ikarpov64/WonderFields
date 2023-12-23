@@ -9,16 +9,16 @@ public class Game {
     private final static int NUMBER_OF_PLAYERS = 3;
     private final static int NUMBER_OF_ROUNDS = 4;
     private final static int NUMBER_OF_GROUP_ROUNDS = 3;
-    private final static int INDEX_OF_FINAL_ROUND = 3;
+    public final static int INDEX_OF_FINAL_ROUND = 3;
 
     public final static Scanner scanner = new Scanner(System.in);
 
     private String[] questions = new String[NUMBER_OF_ROUNDS];
     private String[] answers = new String[NUMBER_OF_ROUNDS];
-    private Tableau tableau = new Tableau();
-    private Yakubovich yakubovich = new Yakubovich();
+    private final Tableau tableau = new Tableau();
+    private final Yakubovich yakubovich = new Yakubovich();
 
-    private Player[] winners = new Player[NUMBER_OF_GROUP_ROUNDS];
+    private final Player[] winners = new Player[NUMBER_OF_GROUP_ROUNDS];
 
     public void init() {
         System.out.println("Запуск игры 'Поле Чудес' - подготовка к игре. " +
@@ -42,14 +42,48 @@ public class Game {
         String string = "Игрок №%s представьтесь: имя,город. Например: Иван,Москва\n";
         for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
             System.out.printf(string, i + 1);
-            String aboutPlayer = scanner.nextLine();
-
-            String[] splitString = aboutPlayer.split(",");
-            Player player = new Player(splitString[0].trim(),
-                    splitString[1].trim());
-            players[i] = player;
+            players[i] = createPlayer();
         }
         return players;
+    }
+
+    private Player createPlayer() {
+        boolean playerChecked = false;
+        String playerInfo = scanner.nextLine();
+        while (!playerChecked) {
+            playerChecked = checkPlayerInfo(playerInfo);
+            if (!playerChecked) {
+                System.out.println("Некорректный ввод. Пожалуйста, введите имя и город через запятую.");
+                playerInfo = scanner.nextLine();
+            }
+        }
+        String[] splitString = playerInfo.split(",");
+        return new Player(splitString[0].trim(), splitString[1].trim());
+    }
+
+    private boolean checkPlayerInfo(String aboutPlayer) {
+        boolean playerChecked = false;
+        if (aboutPlayer.contains(",")) {
+            String[] parts = aboutPlayer.split(",");
+            if (parts.length == 2 && !parts[0].trim().isEmpty() && !parts[1].trim().isEmpty()) {
+                playerChecked = true;
+            }
+        }
+        return playerChecked;
+    }
+
+    public static boolean checkLetter(String letter) {
+        boolean validLetter = false;
+        if (letter.trim().length() == 1) {
+            if (isRussianAlphabetLetter(letter.trim().charAt(0))) {
+                validLetter = true;
+            }
+        }
+        return validLetter;
+    }
+
+    private static boolean isRussianAlphabetLetter(char symbol) {
+        return Character.UnicodeBlock.CYRILLIC.equals(Character.UnicodeBlock.of(symbol));
     }
 
     private void inputtingQuestions() {
@@ -70,41 +104,46 @@ public class Game {
         return playersName;
     }
 
-    private boolean checkTableau() {
-        return !tableau.containsUnknownLetters();
+    private boolean tableauNotOpen() {
+        return this.tableau.containsUnknownLetters();
     }
 
-    public boolean playerTurn(String question, Player player) {
-        PlayerAnswer answer = player.playerTurn();
+    private boolean playerTurn(Player player) {
+        boolean noMistake = true;
 
-
-        while (!checkTableau()) {
-            yakubovich.checkPlayerAnswer(answer, this.answers[1], tableau);
-
+        while (noMistake && tableauNotOpen()) {
+            PlayerAnswer answer = player.turn();
+            if (!yakubovich.checkPlayerAnswer(answer, this.tableau.getCorrectAnswer(), this.tableau)) {
+                noMistake = false;
+            } else {
+                this.tableau.showTableau();
+            }
         }
-        return true;
+        return noMistake;
     }
 
-    public void playRound(Player[] players, int numberOfRound) {
-//        if (numberOfRound == INDEX_OF_FINAL_ROUND) {
-//
-//        } else {
-//
-//        }
+    private void playRound(Player[] players, int numberOfRound) {
+        boolean isFinalRound = numberOfRound == INDEX_OF_FINAL_ROUND;
 
-        do {
-            for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
-                PlayerAnswer answer = players[i].playerTurn();
-                if (!yakubovich.checkPlayerAnswer(answer, answers[numberOfRound], this.tableau)) {
+        while (tableauNotOpen()) {
+            for (Player player : players) {
+                boolean playerWin = playerTurn(player);
+                if (playerWin) {
+                    yakubovich.shoutAboutVictory(player.getName(), player.getCity(), isFinalRound);
+                    if (!isFinalRound) {
+                        winners[numberOfRound] = player;
+                    }
                     break;
-                }
-                if (checkTableau()) {
-                    yakubovich.shoutAboutVictory(players[i].getName(), players[i].getCity(), false);
                 }
             }
         }
-        while (!checkTableau());
+    }
 
+    public void startGame() {
+        yakubovich.greetings();
+        this.playAllGroupRound();
+        this.playFinalRound();
+        yakubovich.farewell();
     }
 
     private void playAllGroupRound() {
@@ -114,7 +153,6 @@ public class Game {
             yakubovich.invitingPlayers(playersName(players), i);
             yakubovich.askingQuestion(questions[i]);
             tableau.showTableau();
-
             playRound(players, i);
         }
     }
@@ -124,16 +162,9 @@ public class Game {
         yakubovich.invitingPlayers(playersName(winners), INDEX_OF_FINAL_ROUND);
         yakubovich.askingQuestion(questions[INDEX_OF_FINAL_ROUND]);
         tableau.showTableau();
-
         playRound(winners, INDEX_OF_FINAL_ROUND);
     }
 
-    public void startGame() {
-        yakubovich.greetings();
-        this.playAllGroupRound();
-        this.playFinalRound();
-        yakubovich.farewell();
-    }
 
     private void completeQuestions() {
         String q1 = "Вопрос номер один?";

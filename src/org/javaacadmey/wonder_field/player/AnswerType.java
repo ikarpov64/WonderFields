@@ -1,7 +1,7 @@
 package org.javaacadmey.wonder_field.player;
 
 public enum AnswerType {
-    ANSWER_TYPE("c", "б");
+    ANSWER_TYPE("с", "б");
 
     private final String word;
     private final String letter;

@@ -7,15 +7,5 @@ public class Runner {
         Game game = new Game();
         game.init();
         game.startGame();
-//        Tableau tableau = new Tableau();
-//        tableau.init("Четыре");
-//        tableau.openWord("Четыре");
-//        tableau.openLetter("е");
-//        tableau.openLetter("т");
-//        tableau.openLetter("ы");
-//        tableau.openLetter("р");
-//        tableau.openLetter("ч");
-//        Player player = new Player("Ivan", "Volsk");
-//        System.out.println(player.playerTurn());
     }
 }
