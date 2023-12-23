@@ -7,6 +7,7 @@ import static org.javaacadmey.wonder_field.player.AnswerType.*;
 public class Player {
     private final String name;
     private final String city;
+    private int scores = 0;
 
     public Player(String name, String city) {
         this.name = name;
@@ -32,7 +33,7 @@ public class Player {
         return word;
     }
 
-    public PlayerAnswer turn() {
+    public PlayerAnswer move() {
         System.out.printf("Ход игрока %s, %s.\n", this.name, this.city);
         System.out.println("Если хотите букву нажмите 'б' и enter, если хотите слово нажмите 'c' и enter.");
 
@@ -63,5 +64,13 @@ public class Player {
 
     public String getCity() {
         return city;
+    }
+
+    public int getScores() {
+        return scores;
+    }
+
+    public void setScores(int scores) {
+        this.scores = scores;
     }
 }

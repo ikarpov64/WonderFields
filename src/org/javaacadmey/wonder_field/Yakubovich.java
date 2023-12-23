@@ -26,14 +26,27 @@ public class Yakubovich {
         }
     }
 
+    public void skippingMoveSectorOnWheelSpeech() {
+        System.out.printf("%s: Сектор 'Пропуск хода' на барабане!\n", name);
+    }
+
+    public void multiplierSectorOnWheelSpeech() {
+        System.out.printf("%s: Сектор 'Умножения очков' на барабане!\n", name);
+    }
+
+    public void scoreSectorOnWheelSpeech(int score) {
+        System.out.printf("%s: На барабане %s очков!\n", name, score);
+    }
+
     public void askingQuestion(String question) {
         System.out.printf("%s: Внимание вопрос!\n'%s'\n", name, question);
     }
 
-    public void shoutAboutVictory(String playerName, String city, boolean isFinalRound) {
+    public void shoutAboutVictory(String playerName, String city, int scores, boolean isFinalRound) {
         if (isFinalRound) {
-            String finalRound = "%s: И перед нами победитель капитал-шоу 'Поле чудес'! Это %s из города %s\n";
-            System.out.printf(finalRound, name, playerName, city);
+            String finalRound = "%s: И перед нами победитель капитал-шоу 'Поле чудес'! "
+                    + "Со счетом %s очков. Это %s из города %s.\n";
+            System.out.printf(finalRound, name, scores, playerName, city);
         } else {
             String round = "%s: Молодец! %s из %s проходит в финал!\n";
             System.out.printf(round, name, playerName, city);

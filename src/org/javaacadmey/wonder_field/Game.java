@@ -2,6 +2,7 @@ package org.javaacadmey.wonder_field;
 
 import org.javaacadmey.wonder_field.player.Player;
 import org.javaacadmey.wonder_field.player.PlayerAnswer;
+import org.javaacadmey.wonder_field.wheel.Wheel;
 
 import java.util.Scanner;
 
@@ -10,15 +11,13 @@ public class Game {
     private final static int NUMBER_OF_ROUNDS = 4;
     private final static int NUMBER_OF_GROUP_ROUNDS = 3;
     public final static int INDEX_OF_FINAL_ROUND = 3;
-
     public final static Scanner scanner = new Scanner(System.in);
-
     private String[] questions = new String[NUMBER_OF_ROUNDS];
     private String[] answers = new String[NUMBER_OF_ROUNDS];
     private final Tableau tableau = new Tableau();
     private final Yakubovich yakubovich = new Yakubovich();
-
     private final Player[] winners = new Player[NUMBER_OF_GROUP_ROUNDS];
+    private final Wheel wheel = new Wheel();
 
     public void init() {
         System.out.println("Запуск игры 'Поле Чудес' - подготовка к игре. " +
@@ -30,10 +29,77 @@ public class Game {
         try {
             Thread.sleep(2000); // 5000 миллисекунд = 5 секунд
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
-        System.out.println("Прошло 5 секунд.");
         System.out.println("\n".repeat(50));
+    }
+
+    public void startGame() {
+        yakubovich.greetings();
+        this.playAllGroupRound();
+        this.playFinalRound();
+        yakubovich.farewell();
+    }
+
+    private void playAllGroupRound() {
+        for (int i = 0; i < NUMBER_OF_GROUP_ROUNDS; i++) {
+            Player[] players = createPlayers();
+            tableau.init(answers[i]);
+            yakubovich.invitingPlayers(playersName(players), i);
+            yakubovich.askingQuestion(questions[i]);
+            tableau.showTableau();
+            playRound(players, i);
+        }
+    }
+
+    private void playFinalRound() {
+        tableau.init(answers[INDEX_OF_FINAL_ROUND]);
+        yakubovich.invitingPlayers(playersName(winners), INDEX_OF_FINAL_ROUND);
+        yakubovich.askingQuestion(questions[INDEX_OF_FINAL_ROUND]);
+        tableau.showTableau();
+        playRound(winners, INDEX_OF_FINAL_ROUND);
+    }
+
+    private void playRound(Player[] players, int numberOfRound) {
+        boolean isFinalRound = numberOfRound == INDEX_OF_FINAL_ROUND;
+
+        while (tableauNotOpen()) {
+            for (Player player : players) {
+                boolean playerWin = playersMove(player);
+                if (playerWin) {
+                    yakubovich.shoutAboutVictory(player.getName(), player.getCity(),
+                            player.getScores(), isFinalRound);
+                    if (!isFinalRound) {
+                        winners[numberOfRound] = player;
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    private boolean playersMove(Player player) {
+        boolean noMistake = true;
+
+        while (noMistake && tableauNotOpen()) {
+            int playerScore = player.getScores();
+            int newScore = wheel.rotateWheel(playerScore, yakubovich);
+
+            if (playerScore == newScore) {
+                noMistake = false;
+                break;
+            }
+
+            PlayerAnswer answer = player.move();
+            if (!this.yakubovich.checkPlayerAnswer(answer, this.tableau.getCorrectAnswer(), this.tableau)) {
+                noMistake = false;
+            } else {
+                this.tableau.showTableau();
+                player.setScores(newScore);
+                System.out.println("У игрока: " + player.getScores());
+            }
+        }
+        return noMistake;
     }
 
     public Player[] createPlayers() {
@@ -57,14 +123,14 @@ public class Game {
                 playerInfo = scanner.nextLine();
             }
         }
-        String[] splitString = playerInfo.split(",");
-        return new Player(splitString[0].trim(), splitString[1].trim());
+        String[] splitPlayerInfo = playerInfo.split(",");
+        return new Player(splitPlayerInfo[0].trim(), splitPlayerInfo[1].trim());
     }
 
-    private boolean checkPlayerInfo(String aboutPlayer) {
+    private boolean checkPlayerInfo(String playerInfo) {
         boolean playerChecked = false;
-        if (aboutPlayer.contains(",")) {
-            String[] parts = aboutPlayer.split(",");
+        if (playerInfo.contains(",")) {
+            String[] parts = playerInfo.split(",");
             if (parts.length == 2 && !parts[0].trim().isEmpty() && !parts[1].trim().isEmpty()) {
                 playerChecked = true;
             }
@@ -96,6 +162,7 @@ public class Game {
             answers[i] = answer;
         }
     }
+
     private static String[] playersName(Player[] players) {
         String[] playersName = new String[NUMBER_OF_PLAYERS];
         for (int i = 0; i < players.length; i++) {
@@ -108,70 +175,12 @@ public class Game {
         return this.tableau.containsUnknownLetters();
     }
 
-    private boolean playerTurn(Player player) {
-        boolean noMistake = true;
-
-        while (noMistake && tableauNotOpen()) {
-            PlayerAnswer answer = player.turn();
-            if (!yakubovich.checkPlayerAnswer(answer, this.tableau.getCorrectAnswer(), this.tableau)) {
-                noMistake = false;
-            } else {
-                this.tableau.showTableau();
-            }
-        }
-        return noMistake;
-    }
-
-    private void playRound(Player[] players, int numberOfRound) {
-        boolean isFinalRound = numberOfRound == INDEX_OF_FINAL_ROUND;
-
-        while (tableauNotOpen()) {
-            for (Player player : players) {
-                boolean playerWin = playerTurn(player);
-                if (playerWin) {
-                    yakubovich.shoutAboutVictory(player.getName(), player.getCity(), isFinalRound);
-                    if (!isFinalRound) {
-                        winners[numberOfRound] = player;
-                    }
-                    break;
-                }
-            }
-        }
-    }
-
-    public void startGame() {
-        yakubovich.greetings();
-        this.playAllGroupRound();
-        this.playFinalRound();
-        yakubovich.farewell();
-    }
-
-    private void playAllGroupRound() {
-        for (int i = 0; i < NUMBER_OF_GROUP_ROUNDS; i++) {
-            Player[] players = createPlayers();
-            tableau.init(answers[i]);
-            yakubovich.invitingPlayers(playersName(players), i);
-            yakubovich.askingQuestion(questions[i]);
-            tableau.showTableau();
-            playRound(players, i);
-        }
-    }
-
-    private void playFinalRound() {
-        tableau.init(answers[INDEX_OF_FINAL_ROUND]);
-        yakubovich.invitingPlayers(playersName(winners), INDEX_OF_FINAL_ROUND);
-        yakubovich.askingQuestion(questions[INDEX_OF_FINAL_ROUND]);
-        tableau.showTableau();
-        playRound(winners, INDEX_OF_FINAL_ROUND);
-    }
-
-
     private void completeQuestions() {
         String q1 = "Вопрос номер один?";
         String q2 = "Вопрос номер два?";
         String q3 = "Вопрос номер три?";
         String q4 = "Вопрос номер четыре?";
-        String a1 = "один";
+        String a1 = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
         String a2 = "два";
         String a3 = "три";
         String a4 = "четыре";
@@ -179,6 +188,4 @@ public class Game {
         this.questions = new String[] {q1, q2, q3, q4};
         this.answers = new String[] {a1, a2, a3, a4};
     }
-
-
 }
