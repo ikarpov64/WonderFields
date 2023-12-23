@@ -82,7 +82,6 @@ public class Game {
         boolean noMistake = true;
 
         while (noMistake && tableauNotOpen()) {
-//            System.out.printf("Ход игрока %s, %s.\n", player.getName(), player.getCity());
             System.out.printf("Игрок %s, %s крутит барабан.\n", player.getName(), player.getCity());
             int playerScore = player.getScores();
             int newScore = wheel.rotateWheel(playerScore, yakubovich);
