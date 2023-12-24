@@ -77,7 +77,6 @@ public class Game {
         }
     }
 
-
     private boolean playersMove(Player player) {
         boolean noMistake = true;
 
