@@ -13,7 +13,6 @@ public class Game {
     public final static Scanner scanner = new Scanner(System.in);
     private String[] questions = new String[NUMBER_OF_ROUNDS];
     private String[] answers = new String[NUMBER_OF_ROUNDS];
-
     private final Tableau tableau = new Tableau();
     private final Yakubovich yakubovich = new Yakubovich();
     private final Player[] winners = new Player[NUMBER_OF_GROUP_ROUNDS];
