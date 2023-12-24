@@ -82,6 +82,13 @@ public class Game {
         boolean noMistake = true;
 
         while (noMistake && tableauNotOpen()) {
+            if (player.getCorrectAttempt() == 3) {
+                MagicBox magicBox = new MagicBox();
+                yakubovich.magicBoxSpeech(player, magicBox);
+                player.setMoneyWin(player.chooseMagicBox(magicBox));
+                yakubovich.magicBoxIsOpenSpeech(player.getName(), player.getMoneyWin());
+            }
+
             System.out.printf("Игрок %s, %s крутит барабан.\n", player.getName(), player.getCity());
             int playerScore = player.getScores();
             int newScore = wheel.rotateWheel(playerScore, yakubovich);
@@ -92,13 +99,15 @@ public class Game {
                         player.getName(), player.getCity());
                 break;
             }
-            PlayerAnswer answer = player.move();
+            PlayerAnswer answer = player.move(tableau);
 
             if (!this.yakubovich.checkPlayerAnswer(answer, this.tableau.getCorrectAnswer(), this.tableau)) {
                 noMistake = false;
+                player.setCorrectAttempt(0);
             } else {
                 this.tableau.showTableau();
                 player.setScores(newScore);
+                player.setCorrectAttempt(player.getCorrectAttempt() + 1);
                 System.out.println("У игрока: " + player.getScores());
             }
         }

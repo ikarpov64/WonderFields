@@ -5,5 +5,6 @@ public class Runner {
         Game game = new Game();
         game.init();
         game.startGame();
+//        MagicBox magicBox = new MagicBox();
     }
 }

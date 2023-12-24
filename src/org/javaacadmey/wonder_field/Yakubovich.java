@@ -1,6 +1,8 @@
 package org.javaacadmey.wonder_field;
 
 import static org.javaacadmey.wonder_field.player.AnswerType.*;
+
+import org.javaacadmey.wonder_field.player.Player;
 import org.javaacadmey.wonder_field.player.PlayerAnswer;
 
 public class Yakubovich {
@@ -34,6 +36,11 @@ public class Yakubovich {
         System.out.printf("%s: Сектор 'Умножения очков' на барабане!\n", name);
     }
 
+    public void magicBoxSpeech(Player player, MagicBox magicBox) {
+        String speech = "%s: %s поздравляю! Вы правильно угадали 3 буквы, вам положено %s шкатулки.\n";
+        System.out.printf(speech, name, player.getName(), magicBox.getBoxQty());
+    }
+
     public void scoreSectorOnWheelSpeech(int score) {
         System.out.printf("%s: На барабане %s очков!\n", name, score);
     }
@@ -64,7 +71,8 @@ public class Yakubovich {
                 System.out.printf("%s: Неверно! Следующий игрок!\n", name);
             }
         } else if (playerAnswer.getAnswerType().equals(ANSWER_TYPE.getLetter())) {
-            if (answer.contains(playerAnswer.getAnswer())) {
+            if (answer.contains(playerAnswer.getAnswer())
+                    && !tableau.containsLetters(playerAnswer.getAnswer())) {
                 String speech = "Есть такая буква, откройте ее!";
                 System.out.printf("%s: %s\n", name, speech);
                 tableau.openLetter(playerAnswer.getAnswer());
@@ -82,5 +90,14 @@ public class Yakubovich {
 
     public static String stringOfPlayersName(String[] playersName) {
         return String.format("%s, %s, %s", playersName[0], playersName[1], playersName[2]);
+    }
+
+    public void magicBoxIsOpenSpeech(String playerName, int money) {
+        if (money != 0) {
+            System.out.printf("%s: %s поздравляю! Вы выиграли %s рублей.\n",
+                    name, playerName, money);
+        } else {
+            System.out.printf("%s: К сожалению шкатулка пуста! Продолжаем игру.\n", name);
+        }
     }
 }
