@@ -9,7 +9,8 @@ public class Yakubovich {
     private static final String name = "Якубович";
 
     public void greetings() {
-        String greetings = "Здравствуйте, уважаемые дамы и господа! Пятница! В эфире капитал-шоу 'Поле чудес'!";
+        String greetings = "Здравствуйте, уважаемые дамы и господа! "
+                + "Пятница! В эфире капитал-шоу 'Поле чудес'!";
         System.out.printf("%s: %s\n", name, greetings);
     }
 

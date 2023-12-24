@@ -1,13 +1,10 @@
 package org.javaacadmey.wonder_field.player;
 
+import static org.javaacadmey.wonder_field.player.AnswerType.*;
 import org.javaacadmey.wonder_field.Game;
 import org.javaacadmey.wonder_field.MagicBox;
 import org.javaacadmey.wonder_field.Tableau;
-import org.javaacadmey.wonder_field.wheel.Wheel;
-
 import java.util.InputMismatchException;
-
-import static org.javaacadmey.wonder_field.player.AnswerType.*;
 
 public class Player {
     private final String name;

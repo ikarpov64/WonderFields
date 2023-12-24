@@ -3,7 +3,6 @@ package org.javaacadmey.wonder_field;
 import org.javaacadmey.wonder_field.player.Player;
 import org.javaacadmey.wonder_field.player.PlayerAnswer;
 import org.javaacadmey.wonder_field.wheel.Wheel;
-
 import java.util.Scanner;
 
 public class Game {
@@ -22,12 +21,12 @@ public class Game {
     public void init() {
         System.out.println("Запуск игры 'Поле Чудес' - подготовка к игре. " +
                 "Вам нужно ввести вопросы и ответы для игры.");
-        completeQuestions();
+        completeQuestions(); // Метод для предзаполнения вопросов.
 //        inputtingQuestions();
         System.out.println("Инициализация закончена, игра начнется через 5 секунд.");
 
         try {
-            Thread.sleep(2000); // 5000 миллисекунд = 5 секунд
+            Thread.sleep(5000); // 5000 миллисекунд = 5 секунд
         } catch (InterruptedException e) {
             System.out.println(e.getMessage());
         }
@@ -82,18 +81,11 @@ public class Game {
         boolean noMistake = true;
 
         while (noMistake && tableauNotOpen()) {
-            if (player.getCorrectAttempt() == 3) {
-                MagicBox magicBox = new MagicBox();
-                yakubovich.magicBoxSpeech(player, magicBox);
-                player.setMoneyWin(player.chooseMagicBox(magicBox));
-                yakubovich.magicBoxIsOpenSpeech(player.getName(), player.getMoneyWin());
-            }
-
             System.out.printf("Игрок %s, %s крутит барабан.\n", player.getName(), player.getCity());
-            int playerScore = player.getScores();
-            int newScore = wheel.rotateWheel(playerScore, yakubovich);
+            int currentScore = player.getScores();
+            int newScore = wheel.rotateWheel(currentScore, yakubovich);
 
-            if (playerScore == newScore) {
+            if (currentScore == newScore) {
                 noMistake = false;
                 System.out.printf("Игрок %s из города %s пропускает ход.\n",
                         player.getName(), player.getCity());
@@ -108,7 +100,14 @@ public class Game {
                 this.tableau.showTableau();
                 player.setScores(newScore);
                 player.setCorrectAttempt(player.getCorrectAttempt() + 1);
-                System.out.println("У игрока: " + player.getScores());
+                System.out.printf("У игрока: %s очков.\n", player.getScores());
+                if (player.getCorrectAttempt() % 3 == 0) {
+                    MagicBox magicBox = new MagicBox();
+                    yakubovich.magicBoxSpeech(player, magicBox);
+                    player.setMoneyWin(player.chooseMagicBox(magicBox));
+                    yakubovich.magicBoxIsOpenSpeech(player.getName(), player.getMoneyWin());
+                    scanner.nextLine(); // Очищаем буфер после метода.
+                }
             }
         }
         return noMistake;
