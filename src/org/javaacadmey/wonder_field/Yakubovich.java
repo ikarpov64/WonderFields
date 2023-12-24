@@ -84,7 +84,7 @@ public class Yakubovich {
                 System.out.printf("%s: %s\n", name, speech);
             }
         } else {
-            System.out.println("Что-то пошло не так.");
+            System.out.println("Некорректный ввод, повторите.");
         }
         System.out.println("__________________________________");
         return correctAnswer;
