@@ -50,14 +50,15 @@ public class Yakubovich {
         System.out.printf("%s: Внимание вопрос!\n'%s'\n", name, question);
     }
 
-    public void shoutAboutVictory(String playerName, String city, int scores, boolean isFinalRound) {
+    public void shoutAboutVictory(Player player, boolean isFinalRound) {
         if (isFinalRound) {
             String finalRound = "%s: И перед нами победитель капитал-шоу 'Поле чудес'! "
-                    + "Со счетом %s очков. Это %s из города %s.\n";
-            System.out.printf(finalRound, name, scores, playerName, city);
+                    + "Со счетом %s очков, и с суммой %s рублей. Это %s из города %s.\n";
+            System.out.printf(finalRound, name, player.getScores(),
+                    player.getMoneyWin(), player.getName(), player.getCity());
         } else {
             String round = "%s: Молодец! %s из %s проходит в финал!\n";
-            System.out.printf(round, name, playerName, city);
+            System.out.printf(round, name, player.getName(), player.getCity());
         }
     }
 

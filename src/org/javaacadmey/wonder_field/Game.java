@@ -67,8 +67,7 @@ public class Game {
             for (Player player : players) {
                 boolean playerWin = playersMove(player);
                 if (playerWin) {
-                    yakubovich.shoutAboutVictory(player.getName(), player.getCity(),
-                            player.getScores(), isFinalRound);
+                    yakubovich.shoutAboutVictory(player, isFinalRound);
                     if (!isFinalRound) {
                         winners[numberOfRound] = player;
                     }
