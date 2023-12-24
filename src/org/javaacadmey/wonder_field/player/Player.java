@@ -12,6 +12,7 @@ public class Player {
     private int scores = 0;
     private int correctAttempt = 0;
     private int moneyWin = 0;
+    private Prize[] prizes;
 
     public Player(String name, String city) {
         this.name = name;
@@ -89,6 +90,39 @@ public class Player {
             }
         }
         return money;
+    }
+
+    public void choosePrizes(Prize[] prizes) {
+        int prizeQty = prizes.length;
+        this.prizes = new Prize[prizeQty];
+        int prizeCount = 0;
+
+        while (this.getScores() > 0) {
+            System.out.println("Введите номер приза, который хотите получить.");
+            for (int i = 0; i < prizeQty; i++) {
+                if (prizes[i] != null) {
+                    System.out.printf("%s - %s: %s\n", i + 1, prizes[i].getPrizeName(), prizes[i].getPrizeValue());
+                }
+            }
+
+            int prizeNumber = Game.scanner.nextInt() - 1;
+            int prizeValue = prizes[prizeNumber].getPrizeValue();
+
+            if (this.getScores() > prizeValue) {
+                if (prizes[prizeNumber] != null) {
+                    this.prizes[prizeCount] = prizes[prizeNumber];
+                    this.setScores(this.getScores() - prizeValue);
+                    prizes[prizeNumber] = null;
+                    prizeCount++;
+                } else {
+                    System.out.println("Этого приза уже нет.");
+                    break;
+                }
+            } else {
+                System.out.println("Не достаточно очков для этого приза, выберите другой.");
+                break;
+            }
+        }
     }
 
     public String getName() {
