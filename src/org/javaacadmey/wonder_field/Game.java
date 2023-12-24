@@ -14,9 +14,6 @@ public class Game {
     private String[] questions = new String[NUMBER_OF_ROUNDS];
     private String[] answers = new String[NUMBER_OF_ROUNDS];
 
-    private String questionOfSuperRound;
-    private String answerOfSuperRound;
-    private Player finalRoundWinner;
     private final Tableau tableau = new Tableau();
     private final Yakubovich yakubovich = new Yakubovich();
     private final Player[] winners = new Player[NUMBER_OF_GROUP_ROUNDS];
@@ -25,9 +22,8 @@ public class Game {
     public void init() {
         System.out.println("Запуск игры 'Поле Чудес' - подготовка к игре. " +
                 "Вам нужно ввести вопросы и ответы для игры.");
-        completeQuestions(); // Метод для предзаполнения вопросов.
-//        inputtingQuestions();
-//         inputtingSuperQuestions();
+//        completeQuestions(); // Метод для предзаполнения вопросов.
+        inputtingQuestions();
         System.out.println("Инициализация закончена, игра начнется через 5 секунд.");
 
         try {
@@ -38,22 +34,10 @@ public class Game {
         System.out.println("\n".repeat(50));
     }
 
-    private void inputtingSuperQuestions() {
-        System.out.println("Введите вопрос на супер-игру");
-        String question = scanner.nextLine();
-        System.out.println("Введите ответ на cупер-вопрос.");
-        String answer = scanner.nextLine();
-        this.questionOfSuperRound = question;
-        this.answerOfSuperRound = answer;
-    }
-
     public void startGame() {
         yakubovich.greetings();
         this.playAllGroupRound();
         this.playFinalRound();
-        if (this.finalRoundWinner != null) {
-            playSuperRound(this.finalRoundWinner);
-        }
         yakubovich.farewell();
     }
 
@@ -76,11 +60,6 @@ public class Game {
         playRound(winners, INDEX_OF_FINAL_ROUND);
     }
 
-    private void playSuperRound(Player finalRoundWinner) {
-        tableau.init(answerOfSuperRound);
-
-    }
-
     private void playRound(Player[] players, int numberOfRound) {
         boolean isFinalRound = numberOfRound == INDEX_OF_FINAL_ROUND;
 
@@ -92,8 +71,6 @@ public class Game {
                             player.getScores(), isFinalRound);
                     if (!isFinalRound) {
                         winners[numberOfRound] = player;
-                    } else {
-                        this.finalRoundWinner = player;
                     }
                     break;
                 }
@@ -101,13 +78,14 @@ public class Game {
         }
     }
 
+
     private boolean playersMove(Player player) {
         boolean noMistake = true;
 
         while (noMistake && tableauNotOpen()) {
             System.out.printf("Игрок %s, %s крутит барабан.\n", player.getName(), player.getCity());
             int currentScore = player.getScores();
-            int newScore = wheel.rotateWheel(currentScore, yakubovich);
+            int newScore = wheel.rotateWheel(currentScore, this.yakubovich);
 
             if (currentScore == newScore) {
                 noMistake = false;
@@ -115,26 +93,36 @@ public class Game {
                         player.getName(), player.getCity());
                 break;
             }
-            PlayerAnswer answer = player.move(tableau);
 
-            if (!this.yakubovich.checkPlayerAnswer(answer, this.tableau.getCorrectAnswer(), this.tableau)) {
-                noMistake = false;
-                player.setCorrectAttempt(0);
-            } else {
-                this.tableau.showTableau();
-                player.setScores(newScore);
-                player.setCorrectAttempt(player.getCorrectAttempt() + 1);
-                System.out.printf("У игрока: %s очков.\n", player.getScores());
-                if (player.getCorrectAttempt() % 3 == 0) {
-                    MagicBox magicBox = new MagicBox();
-                    yakubovich.magicBoxSpeech(player, magicBox);
-                    player.setMoneyWin(player.chooseMagicBox(magicBox));
-                    yakubovich.magicBoxIsOpenSpeech(player.getName(), player.getMoneyWin());
-                    scanner.nextLine(); // Очищаем буфер после метода.
-                }
+            PlayerAnswer answer = player.move(tableau);
+            noMistake = checkPlayersMove(answer, player, newScore);
+        }
+        return noMistake;
+    }
+
+    private boolean checkPlayersMove(PlayerAnswer answer, Player player, int newScore) {
+        boolean noMistake = true;
+        if (!this.yakubovich.checkPlayerAnswer(answer, this.tableau.getCorrectAnswer(), this.tableau)) {
+            noMistake = false;
+            player.setCorrectAttempt(0);
+        } else {
+            this.tableau.showTableau();
+            player.setScores(newScore);
+            player.setCorrectAttempt(player.getCorrectAttempt() + 1);
+            System.out.printf("У игрока: %s очков.\n", player.getScores());
+            if (player.getCorrectAttempt() % 3 == 0) {
+                chooseTheBox(player);
             }
         }
         return noMistake;
+    }
+
+    private void chooseTheBox(Player player) {
+        MagicBox magicBox = new MagicBox();
+        yakubovich.magicBoxSpeech(player, magicBox);
+        player.setMoneyWin(player.chooseMagicBox(magicBox));
+        yakubovich.magicBoxIsOpenSpeech(player.getName(), player.getMoneyWin());
+        scanner.nextLine(); // Очищаем буфер после метода.
     }
 
     public Player[] createPlayers() {
@@ -221,8 +209,5 @@ public class Game {
 
         this.questions = new String[] {q1, q2, q3, q4};
         this.answers = new String[] {a1, a2, a3, a4};
-
-        this.questionOfSuperRound = "Вопрос супер игры.";
-        this.answerOfSuperRound = "суперответ";
     }
 }
